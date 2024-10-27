@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App Tugas 3</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      width: 350px;
+      margin: 20px auto;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+    }
+
+    #taskList {
+      list-style: none;
+      padding: 0;
+    }
+
+    #taskList li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+    }
+
+    .close {
+      color: red;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>My To-Do List</h2>
+    <input type="text" id="newTask" placeholder="Add a new task...">
+    <button onclick="addTask()">Add</button>
+    <ul id="taskList"></ul>
+
+    <h3>Change Page Appearance</h3>
+    <label for="bgColor">Background Color:</label>
+    <select id="bgColor" onchange="changeBackgroundColor()">
+      <option value="">Select</option>
+      <option value="lightblue">Light Blue</option>
+      <option value="lightgreen">Light Green</option>
+      <option value="lightcoral">Light Coral</option>
+    </select>
+
+    <div>
+      <label>Font Size:</label>
+      <button onclick="changeFontSize('increase')">A+</button>
+      <button onclick="changeFontSize('decrease')">A-</button>
+    </div>
+
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+    <div>
+      <label for="fontStyle">Font Style:</label>
+      <select id="fontStyle" onchange="changeFontStyle()">
+        <option value="sans-serif">Sans-serif</option>
+        <option value="serif">Serif</option>
+      </select>
+    </div>
+  </div>
+
+  <script>
+    function addTask() {
+      const taskInput = document.getElementById("newTask");
+      const taskText = taskInput.value.trim();
+      if (taskText === "") return;
+
+      const li = document.createElement("li");
+      li.textContent = taskText;
+
+      li.addEventListener("click", () => {
+        li.classList.toggle("completed");
+      });
+
+      li.addEventListener("dblclick", () => editTask(li));
+
+      const closeBtn = document.createElement("span");
+      closeBtn.className = "close";
+      closeBtn.textContent = "x";
+      closeBtn.onclick = () => deleteTask(li);
+
+      li.appendChild(closeBtn);
+      document.getElementById("taskList").appendChild(li);
+
+      taskInput.value = "";
+    }
+
+    function deleteTask(element) {
+      element.remove();
+    }
+
+    function editTask(element) {
+      const newText = prompt("Edit task:", element.textContent.replace("x", "").trim());
+      if (newText !== null && newText.trim() !== "") {
+        element.firstChild.nodeValue = newText;
+      }
+    }
+
+    function changeBackgroundColor() {
+      const bgColor = document.getElementById("bgColor").value;
+      document.body.style.backgroundColor = bgColor;
+    }
+
+    function changeFontSize(action) {
+      const currentFontSize = parseFloat(window.getComputedStyle(document.body).fontSize);
+      document.body.style.fontSize = action === "increase" ? (currentFontSize + 2) + "px" : (currentFontSize - 2) + "px";
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      if (document.body.classList.contains("dark-mode")) {
+        document.body.style.backgroundColor = "#333";
+        document.body.style.color = "#fff";
+      } else {
+        document.body.style.backgroundColor = "";
+        document.body.style.color = "";
+      }
+    }
+
+    function changeFontStyle() {
+      const fontStyle = document.getElementById("fontStyle").value;
+      document.body.style.fontFamily = fontStyle;
+    }
+  </script>
+</body>
+
+</html>
